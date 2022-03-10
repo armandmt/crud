@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
+import Tasca from './Tasca'
 
 
 const App = () => {
@@ -11,15 +12,15 @@ const App = () => {
   const [id, setId] = useState("")
   const [error, setError] = useState(null)
 
-  const editar = (item) => {
-
-
-    console.log(item)
-    setModeEdicio(true)
-    setTasca(item.nomTasca)
-    setId(item.id)
-
-  }
+  const elements = [
+    setTasca,
+    setTasques,
+    setModeEdicio,
+    setId,
+    setError,
+    tasques
+  ]
+  
   const editarTasca = (e) => {
 
 
@@ -44,20 +45,6 @@ const App = () => {
     setTasca('')
     setModeEdicio(false)
     setError(null)
-
-
-  }
-  const esborrarTasca = (id) => {
-
-    console.log(id)
-
-    const arrayFiltrat = tasques.filter ( (v) => {
-
-        return ( v.id !== id )
-
-    }) 
-
-    setTasques(arrayFiltrat)
 
 
   }
@@ -108,18 +95,9 @@ const App = () => {
               tasques.map ( (v) => {
                 return (
   
-                  <li key = { v.id } className="list-group-item" >
-              <span className="lead">{ v.nomTasca }</span>
-              <button 
-                className="btn btn-sm btn-danger float-right mx-2"
-                onClick={ () => esborrarTasca(v.id) }
-              >Esborrar</button>
-              <button 
-                className="btn btn-sm btn-warning float-right"
-                onClick={ () => editar (v)}
-              >Editar</button>
-            </li>
-  
+
+                  <Tasca elements={elements} tasca={v} key= { v.id }/>
+                 
                 )
               })
 
