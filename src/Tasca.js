@@ -1,4 +1,7 @@
 import React from 'react'
+import { doc, deleteDoc } from "firebase/firestore";
+import {db} from './firebase.js';
+
 
 const Tasca = ({elements,tasca}) => {
 
@@ -9,7 +12,7 @@ const Tasca = ({elements,tasca}) => {
 
         console.log(item)
         setModeEdicio(true)
-        setTasca(item.nomTasca)
+        setTasca(item.item.todo)
         setId(item.id)
     
       }
@@ -17,20 +20,21 @@ const Tasca = ({elements,tasca}) => {
       const esborrarTasca = (id) => {
     
         console.log(id)
+        deleteDoc(doc(db,'todos',id))
     
-        const arrayFiltrat = tasques.filter ( (v) => {
+        // const arrayFiltrat = tasques.filter ( (v) => {
     
-            return ( v.id !== id )
+        //     return ( v.id !== id )
     
-        }) 
+        // }) 
     
-        setTasques(arrayFiltrat)
+        // setTasques(arrayFiltrat)
     
     
       }
   return (
     <li  className="list-group-item" >
-    <span className="lead">{ tasca.nomTasca }</span>
+    <span className="lead">{ tasca.item.todo }</span>
     <button 
       className="btn btn-sm btn-danger float-right mx-2"
       onClick={ () => esborrarTasca(tasca.id) }

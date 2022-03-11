@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
 import Tasca from './Tasca'
+import { db } from './firebase.js';
+import { collection , doc, setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 
+const q=query(collection(db,'todos'),orderBy('timestamp','desc'));
 
 const App = () => {
 
@@ -11,6 +14,16 @@ const App = () => {
   const [modeEdicio, setModeEdicio] = useState(false)
   const [id, setId] = useState("")
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    onSnapshot(q,(snapshot)=>{
+      setTasques(snapshot.docs.map(doc=>(
+              {
+              id: doc.id,
+              item: doc.data()
+              }
+      )))
+  })},[tasca]);
 
   const elements = [
     setTasca,
@@ -33,14 +46,20 @@ const App = () => {
       setError("Introdueix algun valor")
       return
     }
-    const arrayEditat = tasques.map ( (v) => {
+    // const arrayEditat = tasques.map ( (v) => {
 
-      return (v.id === id ? { id:id, nomTasca: tasca} : v)
+    //   return (v.id === id ? { id:id, nomTasca: tasca} : v)
 
-    })
+    // })
 
-    console.log(arrayEditat)
-    setTasques(arrayEditat)
+    // console.log(arrayEditat)
+    // setTasques(arrayEditat)
+
+    setDoc(doc(db, "todos", id), {
+      todo: tasca,
+      timestamp: serverTimestamp()
+    });
+
     setId('')
     setTasca('')
     setModeEdicio(false)
@@ -60,14 +79,18 @@ const App = () => {
 
       return
     }
+    addDoc(collection(db,'todos'),{
+      todo:tasca,
+      timestamp: serverTimestamp()
+  })
     console.log(tasca)
     setTasca('')
     setError(null)
   
-    setTasques ([...tasques,{
-      id: nanoid(),
-      nomTasca: tasca
-    }])
+    // setTasques ([...tasques,{
+    //   id: nanoid(),
+    //   nomTasca: tasca
+    // }])
 
 
 
