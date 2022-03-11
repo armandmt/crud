@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { nanoid } from 'nanoid'
+// import { nanoid } from 'nanoid'
 import Tasca from './Tasca'
 import { db } from './firebase.js';
 import { collection , doc, setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
