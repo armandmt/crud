@@ -6,7 +6,7 @@ import { db } from './firebase.js';
 import { collection , doc, setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 
 const q=query(collection(db,'todos'),orderBy('timestamp','desc'));
-
+console.log(q)
 const App = () => {
 
   const [tasca, setTasca] = useState("")
@@ -16,6 +16,7 @@ const App = () => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    console.log("prova")
     onSnapshot(q,(snapshot)=>{
       setTasques(snapshot.docs.map(doc=>(
               {
@@ -23,7 +24,7 @@ const App = () => {
               item: doc.data()
               }
       )))
-  })},[tasca]);
+  })},[]);
 
   const elements = [
     setTasca,
