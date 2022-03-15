@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
 import { db } from './firebase.js';
-import { collection , doc, getDocs, setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
+import { collection , doc, getDocs, deleteDoc,setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 
 const App = () => {
 
@@ -21,13 +21,18 @@ const App = () => {
 
     console.log(dades) 
 
-    dades.docs.map ((v) => {
-      return v.data()
-    }) 
+    setTasques(dades.docs.map ((v) => {
+      return {...v.data(),id:v.id}
+    }) )
 
   }
 
-  getTasques()
+  useEffect( ()=> {
+
+    getTasques()
+
+  },[])
+  
  
   const editar = (item) => {
 
@@ -50,14 +55,22 @@ const App = () => {
       setError("Introdueix algun valor")
       return
     }
-    const arrayEditat = tasques.map ( (v) => {
+    // const arrayEditat = tasques.map ( (v) => {
 
-      return (v.id === id ? { id:id, nomTasca: tasca} : v)
+    //   return (v.id === id ? { id:id, nomTasca: tasca} : v)
 
+    // })
+
+    // console.log(arrayEditat)
+    // setTasques(arrayEditat)
+
+    setDoc(doc(db,"Tasques",id),{
+      nomTasca: tasca,
+      time: serverTimestamp()
     })
 
-    console.log(arrayEditat)
-    setTasques(arrayEditat)
+    getTasques()
+
     setId('')
     setTasca('')
     setModeEdicio(false)
@@ -69,13 +82,16 @@ const App = () => {
 
     console.log(id)
 
-    const arrayFiltrat = tasques.filter ( (v) => {
+    // const arrayFiltrat = tasques.filter ( (v) => {
 
-        return ( v.id !== id )
+    //     return ( v.id !== id )
 
-    }) 
+    // }) 
 
-    setTasques(arrayFiltrat)
+    // setTasques(arrayFiltrat)
+
+    deleteDoc(doc(db,'Tasques',id))
+    getTasques()
 
 
   }
@@ -95,12 +111,17 @@ const App = () => {
     setTasca('')
     setError(null)
   
-    setTasques ([...tasques,{
-      id: nanoid(),
-      nomTasca: tasca
-    }])
+    // setTasques ([...tasques,{
+    //   id: nanoid(),
+    //   nomTasca: tasca
+    // }])
 
+    addDoc(tasqCollectionRef,{
+        nomTasca:tasca,
+        time:serverTimestamp()
+    })
 
+    getTasques()
 
   }
 
