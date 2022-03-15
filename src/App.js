@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
-
+import { db } from './firebase.js';
+import { collection , doc, getDocs, setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 
 const App = () => {
 
@@ -11,6 +12,23 @@ const App = () => {
   const [id, setId] = useState("")
   const [error, setError] = useState(null)
 
+
+  const tasqCollectionRef =collection(db,"Tasques")
+
+  const getTasques = async () => {
+
+    const dades = await getDocs(tasqCollectionRef)
+
+    console.log(dades) 
+
+    dades.docs.map ((v) => {
+      return v.data()
+    }) 
+
+  }
+
+  getTasques()
+ 
   const editar = (item) => {
 
 
