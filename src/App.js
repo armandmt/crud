@@ -15,6 +15,8 @@ const App = () => {
 
   const tasqCollectionRef =collection(db,"Tasques")
 
+  // const q = query(tasqCollectionRef,orderBy('time','desc'));
+
   const getTasques = async () => {
 
     const dades = await getDocs(tasqCollectionRef)
@@ -29,6 +31,13 @@ const App = () => {
 
   useEffect( ()=> {
 
+    // onSnapshot(q, (data)=> {
+
+    //   setTasques(data.docs.map ((v) => {
+    //     return {...v.data(),id:v.id}
+    //   }) )
+
+    // } )
     getTasques()
 
   },[])
