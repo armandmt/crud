@@ -3,10 +3,26 @@ import { useState } from 'react'
 import { nanoid } from 'nanoid'
 import { db } from './firebase.js';
 import { collection , doc, getDocs, deleteDoc,setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
-
+import './index.css'
 const App = () => {
 
+  // Estats del formulari
+  
+  const [dades, setDades] = useState({})  // substitueix a estats individuals
   const [tasca, setTasca] = useState("")
+  const [tipu, setTipu] = useState("")
+  const [venciment, setVenciment] = useState((new Date()).toISOString().substring(0,16))
+  //const [created, setCreated] = useState((new Date()).toISOString().substring(0,16))
+  // No cal un estat si la variable no es veu ni necessita provocar una renderització
+  let created=""
+
+  // new Date()).toISOString().substring(0,16)
+  //  data actual -->  converteix a format datetime-local --> i elimina els milisegons i segons
+   
+  
+
+  // Estat amb l'array de dades
+  const [tipus, setTipus] = useState([])
   const [tasques, setTasques] = useState([])
   const [modeEdicio, setModeEdicio] = useState(false)
   const [id, setId] = useState("")
@@ -15,7 +31,7 @@ const App = () => {
 
   const tasqCollectionRef =collection(db,"Tasques")
 
-  const q = query(tasqCollectionRef,orderBy('time','desc'));
+  const q = query(tasqCollectionRef,orderBy('created','desc'));
 
   const getTasques = async () => {
 
@@ -29,16 +45,34 @@ const App = () => {
 
   }
 
+  const getTipus = async () => {
+
+    const dades = await getDocs(collection(db,"Tasques"))
+
+    setTipus(dades.docs.map ((v) => {
+      return {...v.data(),id:v.id}
+    }) )
+  }
+
   useEffect( ()=> {
 
     onSnapshot(q, (data)=> {
 
       setTasques(data.docs.map ((v) => {
-        return {...v.data(),id:v.id}
+        return {
+          ...v.data(),
+          id:v.id
+        }
       }) )
+      console.log(tasques)
+
 
     } )
-    getTasques()
+
+
+    // no cal onsnapshot 
+    getTipus()
+    //getTasques()
 
   },[])
   
@@ -48,7 +82,10 @@ const App = () => {
 
     console.log(item)
     setModeEdicio(true)
+    // Establim els estats per a poder editar
     setTasca(item.nomTasca)
+    setVenciment(item.venciment)
+    created=item.created  // No cal un estat. Aquest valor no es veu
     setId(item.id)
 
   }
@@ -74,11 +111,15 @@ const App = () => {
     // setTasques(arrayEditat)
 
     setDoc(doc(db,"Tasques",id),{
-      nomTasca: tasca,
-      time: serverTimestamp()
+      
+      created: created,
+      nomTasca: tasca, // a l'anterior es fa còpia de tots els camps
+      venciment: venciment // però es modfiquen els que ens interessen
+    
+      
     })
 
-    getTasques()
+    //getTasques()
 
     setId('')
     setTasca('')
@@ -100,7 +141,7 @@ const App = () => {
     // setTasques(arrayFiltrat)
 
     deleteDoc(doc(db,'Tasques',id))
-    getTasques()
+    //getTasques()
 
 
   }
@@ -127,7 +168,8 @@ const App = () => {
 
     addDoc(tasqCollectionRef,{
         nomTasca:tasca,
-        time:serverTimestamp()
+        venciment: venciment, 
+        created: new Date().toISOString().substring(0,16)  // passem a format iso
     })
 
     getTasques()
@@ -157,7 +199,10 @@ const App = () => {
                 return (
   
                   <li key = { v.id } className="list-group-item" >
-              <span className="lead">{ v.nomTasca }</span>
+              <span className="lead">
+                <span className='overxxx'>{ v.nomTasca }</span> 
+              </span>
+              
               <button 
                 className="btn btn-sm btn-danger float-right mx-2"
                 onClick={ () => esborrarTasca(v.id) }
@@ -166,6 +211,9 @@ const App = () => {
                 className="btn btn-sm btn-warning float-right"
                 onClick={ () => editar (v)}
               >Editar</button>
+              <small className="mr-3 float-right">{ v.venciment.split("T")[1] } </small>
+              <small className="float-right">{ v.venciment.split("T")[0] }/ </small>
+
             </li>
   
                 )
@@ -199,6 +247,14 @@ const App = () => {
             onChange={ e => setTasca(e.target.value)  }
             value = { tasca }
          />
+         <input 
+            type="datetime-local" 
+            className="form-control mb-2"
+            placeholder="Venciment de la Tasca"
+            onChange={ e => setVenciment(e.target.value)  }
+            value = { venciment }
+         />
+
 
          {
             modeEdicio ? (
