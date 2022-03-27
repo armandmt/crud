@@ -7,6 +7,11 @@ import { collection , doc, getDocs, deleteDoc,setDoc, query, orderBy , onSnapsho
 const App = () => {
 
   const [tasca, setTasca] = useState("")
+  const [descripcio, setDescripcio] = useState("")
+  const [email, setEmail] = useState("")
+
+  const [taska,setTaska] = useState({})
+  
   const [tasques, setTasques] = useState([])
   const [modeEdicio, setModeEdicio] = useState(false)
   const [id, setId] = useState("")
@@ -17,6 +22,15 @@ const App = () => {
 
   const q = query(tasqCollectionRef,orderBy('time','desc'));
 
+
+  const handleInputChange = ({target}) => {
+
+          setTaska({
+              ...taska,
+              [target.name]:target.value
+           })
+ 
+  }
   const getTasques = async () => {
 
     const dades = await getDocs(tasqCollectionRef)
@@ -78,7 +92,7 @@ const App = () => {
       time: serverTimestamp()
     })
 
-    getTasques()
+    //getTasques()
 
     setId('')
     setTasca('')
@@ -100,7 +114,7 @@ const App = () => {
     // setTasques(arrayFiltrat)
 
     deleteDoc(doc(db,'Tasques',id))
-    getTasques()
+    //getTasques()
 
 
   }
@@ -130,7 +144,7 @@ const App = () => {
         time:serverTimestamp()
     })
 
-    getTasques()
+    //getTasques()
 
   }
 
@@ -194,11 +208,29 @@ const App = () => {
 
           <input 
             type="text" 
+            name="tasca"
             className="form-control mb-2"
             placeholder="Afegeix Tasca"
-            onChange={ e => setTasca(e.target.value)  }
-            value = { tasca }
+            onChange={ handleInputChange }
+            value = { taska.tasca }
          />
+         <input 
+            type="text"
+            name="descripcio" 
+            className="form-control mb-2"
+            placeholder="Afegeix Descripció"
+            onChange={ handleInputChange  }
+            value = { taska.descripcio }
+         />
+         <input 
+            type="text" 
+            name="email"
+            className="form-control mb-2"
+            placeholder="Afegeix e-mail"
+            onChange={ handleInputChange  }
+            value = { taska.email }
+         />
+
 
          {
             modeEdicio ? (
