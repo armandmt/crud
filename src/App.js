@@ -45,7 +45,7 @@ const App = () => {
 
   useEffect( ()=> {
 
-    onSnapshot(q, (data)=> {
+    const unsubscribe = onSnapshot(q, (data)=> {
 
       setTasques(data.docs.map ((v) => {
         return {...v.data(),id:v.id}
@@ -53,6 +53,14 @@ const App = () => {
 
     } )
     getTasques()
+
+    return ( ()=> { 
+
+      // Això s'executa cada cop que es desmunta el component
+      console.log("Se salio")
+      unsubscribe()
+  
+    })
 
   },[])
   
