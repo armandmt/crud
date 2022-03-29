@@ -2,8 +2,11 @@ import React from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
 
-const Menu = () => {
+const Menu = ({ estat }) => {
 
+
+  const [ usuari, setUsuari] = estat
+ 
 
   return (
     <>
@@ -11,7 +14,7 @@ const Menu = () => {
     <nav className="navbar navbar-light bg-light justify-content-center">
     <ul className="nav navbar-light justify-content-center">
     <li className="nav-item">
-      <Link to="/" className="nav-link active">App</Link> 
+      <Link to="/" className="nav-link active">Home</Link> 
     </li>
     <li className="nav-item">
     <Link to="/about" className="nav-link" >About</Link>
@@ -19,6 +22,10 @@ const Menu = () => {
     <li className="nav-item">
       <Link to="/login" className="nav-link">Login</Link>
     </li>
+    <li className="nav-item">
+      <span>{ usuari } </span>
+    </li>
+   
    
   
 </ul>
