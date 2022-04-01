@@ -1,24 +1,38 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
 import { db } from './firebase.js';
 import { collection , where, doc, getDocs, deleteDoc,setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
+import { toBeRequired } from '@testing-library/jest-dom/dist/matchers';
 
 const Home = ({ estat }) => {
 
 
   const [ usuari, setUsuari] = estat
 
+  const comptador = useRef(0)
+  const inputTasca = useRef()
+  const estaMuntat = useRef(true)
+
+
   const [tasca, setTasca] = useState("")
   const [descripcio, setDescripcio] = useState("")
   const [email, setEmail] = useState("")
 
-  const [taska,setTaska] = useState({})
+  const [taska,setTaska] = useState({
+    // Cal establir un valor inicial o llarga un warning a la consola
+    tasca: "",
+    descripcio: "",
+    email: ""
+  })
   
+
+
   const [tasques, setTasques] = useState([])
   const [modeEdicio, setModeEdicio] = useState(false)
   const [id, setId] = useState("")
   const [error, setError] = useState(null)
+
 
 
   const tasqCollectionRef =collection(db,"Tasques")
@@ -40,19 +54,38 @@ const Home = ({ estat }) => {
 
     console.log(dades) 
 
+
     setTasques(dades.docs.map ((v) => {
       return {...v.data(),id:v.id}
     }) )
 
   }
 
+
+
   useEffect( ()=> {
 
-    const unsubscribe = onSnapshot(q, (data)=> {
+    
 
-      setTasques(data.docs.map ((v) => {
-        return {...v.data(),id:v.id}
-      }) )
+    const unsubscribe = onSnapshot(q, (data)=> {
+       
+          comptador.current++;
+
+
+          setTimeout( ()=> {
+
+            if (estaMuntat.current == true) 
+            {
+              setTasques(data.docs.map ((v) => {
+                return {...v.data(),id:v.id}
+              }) )
+            }
+            else  console.log("Ehh paio, que ja no existeixo")
+         
+          },4000)
+         
+         
+
       
       console.log("He canviat coses")
 
@@ -62,6 +95,7 @@ const Home = ({ estat }) => {
 
       unsubscribe()
       console.log("Adeu me piro")
+   
     }
 
 
@@ -167,7 +201,14 @@ const Home = ({ estat }) => {
         time:serverTimestamp()
     })
 
-    //getTasques()
+    
+    setTaska({
+      // Cal establir un valor inicial o llarga un warning a la consola
+      tasca: "",
+      descripcio: "",
+      email: ""
+    })
+    inputTasca.current.focus()
 
   }
 
@@ -224,11 +265,12 @@ const Home = ({ estat }) => {
        
        </h4>
         <form onSubmit={ modeEdicio ? editarTasca : afegirTasca }>
-          <span className='text-danger'>{ error } </span>
+          <span className='text-danger'>{ error } { comptador.current } </span>
 
           <input 
             type="text" 
             name="tasca"
+            ref = { inputTasca }
             className="form-control mb-2"
             placeholder="Afegeix Tasca"
             onChange={ handleInputChange }
