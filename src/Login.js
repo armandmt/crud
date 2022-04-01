@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { UserContext } from './UserContext'
 
-const Login = ({ estat }) => {
+const Login = () => {
 
-  const [ usuari, setUsuari ] = estat
+ const estat = useContext(UserContext)
+  const { usuari, setUsuari } = estat
   const [ nom,setNom ] = useState("")
   
   const handleForm = (e) => {

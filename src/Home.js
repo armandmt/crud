@@ -1,15 +1,19 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useContext, useEffect, useMemo, useRef } from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
 import { db } from './firebase.js';
 import { collection , where, doc, getDocs, deleteDoc,setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 import { toBeRequired } from '@testing-library/jest-dom/dist/matchers';
 import Tasca from './components/Tasca.js';
+import { UserContext } from './UserContext.js';
 
-const Home = ({ estat }) => {
+const Home = () => {
 
 
-  const [ usuari, setUsuari] = estat
+
+  const estat = useContext(UserContext)
+
+  const {usuari, setUsuari}  = estat
 
   const comptador = useRef(0)
   const inputTasca = useRef()

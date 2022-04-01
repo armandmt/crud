@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link, Outlet } from 'react-router-dom'
+import { UserContext } from './UserContext'
 
 
-const Menu = ({ estat }) => {
+const Menu = () => {
 
 
-  const [ usuari, setUsuari] = estat
+  const estat = useContext(UserContext)
+  const { usuari, setUsuari } = estat
  
 
   return (
