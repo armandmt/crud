@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
 import { db } from './firebase.js';
 import { collection , where, doc, getDocs, deleteDoc,setDoc, query, orderBy , onSnapshot, addDoc,serverTimestamp} from 'firebase/firestore';
 import { toBeRequired } from '@testing-library/jest-dom/dist/matchers';
+import Tasca from './components/Tasca.js';
 
 const Home = ({ estat }) => {
 
@@ -120,6 +121,10 @@ const Home = ({ estat }) => {
     console.log(item)
     setModeEdicio(true)
     setTasca(item.nomTasca)
+    setTaska({
+      ...taska,
+      tasca: item.nomTasca
+    })
     setId(item.id)
 
   }
@@ -146,7 +151,10 @@ const Home = ({ estat }) => {
 
     setDoc(doc(db,"Tasques",id),{
       nomTasca: taska.tasca,
-      time: serverTimestamp()
+      username: usuari,
+      time:serverTimestamp()
+
+      
     })
 
     //getTasques()
@@ -155,6 +163,7 @@ const Home = ({ estat }) => {
     setTasca('')
     setModeEdicio(false)
     setError(null)
+    inputTasca.current.focus()
 
 
   }
@@ -213,6 +222,7 @@ const Home = ({ estat }) => {
 
   }
 
+
   return (
    
   <div className="container mt-5">
@@ -232,20 +242,17 @@ const Home = ({ estat }) => {
 
             ) :
             (
+
+              
               tasques.map ( (v) => {
                 return (
   
-                  <li key = { v.id } className="list-group-item" >
-              <span className="lead">{ v.nomTasca }</span>
-              <button 
-                className="btn btn-sm btn-danger float-right mx-2"
-                onClick={ () => esborrarTasca(v.id) }
-              >Esborrar</button>
-              <button 
-                className="btn btn-sm btn-warning float-right"
-                onClick={ () => editar (v)}
-              >Editar</button>
-            </li>
+                  <Tasca 
+                    key = { v.id } 
+                    v={v}
+                    esborrarTasca = { esborrarTasca }
+                    editar= {editar}
+                  />
   
                 )
               })
