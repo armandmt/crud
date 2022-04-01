@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UserContext } from './UserContext'
 
 const Login = () => {
@@ -6,11 +7,14 @@ const Login = () => {
  const estat = useContext(UserContext)
   const { usuari, setUsuari } = estat
   const [ nom,setNom ] = useState("")
+  const navigate = useNavigate()
   
   const handleForm = (e) => {
 
      e.preventDefault()
       setUsuari(nom)
+      navigate("/")
+      
   }
 
   return (
