@@ -72,7 +72,7 @@ const Home = ({ estat }) => {
           comptador.current++;
 
 
-          setTimeout( ()=> {
+          // setTimeout( ()=> {
 
             if (estaMuntat.current == true) 
             {
@@ -82,11 +82,9 @@ const Home = ({ estat }) => {
             }
             else  console.log("Ehh paio, que ja no existeixo")
          
-          },4000)
+          // },4000)
          
          
-
-      
       console.log("He canviat coses")
 
     } )
@@ -94,6 +92,9 @@ const Home = ({ estat }) => {
     return () => {
 
       unsubscribe()
+
+      estaMuntat.current = false
+
       console.log("Adeu me piro")
    
     }
