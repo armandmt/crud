@@ -7,13 +7,13 @@ const Login = () => {
  const estat = useContext(UserContext)
   const { usuari, setUsuari } = estat
   const [ nom,setNom ] = useState("")
-  const navigate = useNavigate()
-  
+  const navegar = useNavigate()
+
   const handleForm = (e) => {
 
      e.preventDefault()
       setUsuari(nom)
-      navigate("/")
+      navegar("/home")
       
   }
 
