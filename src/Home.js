@@ -77,17 +77,17 @@ const Home = () => {
           comptador.current++;
 
 
-          // setTimeout( ()=> {
+          setTimeout( ()=> {
 
-            if (estaMuntat.current == true) 
-            {
+             if (estaMuntat.current == true) 
+             {
               setTasques(data.docs.map ((v) => {
                 return {...v.data(),id:v.id}
               }) )
             }
-            else  console.log("Ehh paio, que ja no existeixo")
+             else  console.log("Ehh paio, que ja no existeixo")
          
-          // },4000)
+          },4000)
          
          
       console.log("He canviat coses")
