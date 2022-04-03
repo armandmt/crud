@@ -10,7 +10,7 @@ import { UserContext } from './UserContext';
 const App = () => {
 
 
-  const state = useState("armand")
+  const state = useState("")
 
   const [ usuari, setUsuari ] = state
 
@@ -19,7 +19,7 @@ const App = () => {
     <UserContext.Provider value= {{ usuari,setUsuari } }>
     <Routes>
         <Route path="/" element={ <Menu  />}>
-            <Route index element= {<Home  />} />
+            <Route index element= {  usuari != "" ? <Home  /> : <Login/>} />
             <Route path="about" element= {<About/>} />
             <Route path="login" element= {<Login />} />
             <Route path="*" element= {<Home/>} />

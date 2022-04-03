@@ -38,8 +38,6 @@ const Home = () => {
   const [id, setId] = useState("")
   const [error, setError] = useState(null)
 
-
-
   const tasqCollectionRef =collection(db,"Tasques")
 
   // const q = query(tasqCollectionRef,orderBy('time','desc'));
@@ -59,25 +57,17 @@ const Home = () => {
 
     console.log(dades) 
 
-
     setTasques(dades.docs.map ((v) => {
       return {...v.data(),id:v.id}
     }) )
 
   }
 
-
-
   useEffect( ()=> {
-
-    
 
     const unsubscribe = onSnapshot(q, (data)=> {
        
           comptador.current++;
-
-
-          setTimeout( ()=> {
 
              if (estaMuntat.current == true) 
              {
@@ -86,9 +76,7 @@ const Home = () => {
               }) )
             }
              else  console.log("Ehh paio, que ja no existeixo")
-         
-          },4000)
-         
+       
          
       console.log("He canviat coses")
 
